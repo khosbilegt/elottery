@@ -1,12 +1,11 @@
 'use client';
 
-import { Users } from './components';
-
+import { Months } from './components';
 
 export default function Page() {
   return (
     <div className='w-full flex justify-center items-center'>
-      <Users />
+      <Months />
     </div>
   );
 }
