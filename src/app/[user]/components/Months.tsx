@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 import { Button, FloatButton, List, Form, DatePicker, Modal, Typography } from 'antd';
 import type { DatePickerProps } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
-import { MonthRow } from './';
+import { MonthRow } from '.';
 
 
 const { Title } = Typography;
