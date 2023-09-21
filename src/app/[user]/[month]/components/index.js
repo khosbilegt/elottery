@@ -1,5 +1,7 @@
-import LotteryTable from "./LotteryTable";
+import Receipts from "./Receipts";
+import Percentages from './Percentages';
 
 export {
-    LotteryTable
+    Receipts,
+    Percentages
 }

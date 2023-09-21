@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { List, Card, Typography, Breadcrumb, FloatButton, Modal, Button, Form, Input, message } from 'antd';
 import { usePathname } from 'next/navigation';
 import { UserAddOutlined } from '@ant-design/icons';
+import { Percentages } from './';
 
 const { Text } = Typography;
 
 
-function LotteryTable() {
+function Receipts() {
   const [receipt, setReceipt] = useState();
-  const [receipts, setReceipts] = useState();
+  const [receipts, setReceipts] = useState([]);
   const [isCreateReceiptOpen, setCreateReceiptOpen] = useState(false);
 
   const pathName = usePathname();
@@ -68,7 +69,7 @@ function LotteryTable() {
   }, []);
 
   return (
-    <div className='w-1/2 h-full text-center flex flex-col mt-5'>
+    <div className='w-[60vw] h-full text-center flex flex-col mt-5'>
         <Breadcrumb className='text-lg'
           items={[
             {
@@ -79,42 +80,43 @@ function LotteryTable() {
             },
           ]}
         />
-      <Card  title={"Бүртгэгдсэн баримтууд"} className='mt-5'>
-        <List
-          grid={{
-            gutter: 16,
-            xs: 1,
-            sm: 2,
-            md: 4,
-            lg: 4,
-            xl: 6,
-            xxl: 3,
-          }}
-          dataSource={receipts}
-          renderItem={(item) => (
-            <List.Item>
-              <Text>{item}</Text>
-            </List.Item>
-          )}
-        />
-      </Card>
-      <FloatButton type='primary' onClick={showCreateReceiptModal} icon={<UserAddOutlined />} className='w-[75px] h-[75px]'/>
-      <Modal 
-        title="Хэрэглэгч үүсгэх" 
-        open={isCreateReceiptOpen}
-        onCancel={handleCreateReceiptCancel}
-        footer={<Button className='btn primary' onClick={handleCreateReceiptOk} >Үүсгэх</Button>}
-      >
-        <Form className='flex flex-col justify-center'>
-            <Form.Item
-                  label='Баримтын дугаар:'
-                  name='name'>
-                  <Input placeholder='102324252' onChange={(e) => {setReceipt(e.target.value)}}/>
-            </Form.Item>
-         </Form>
-      </Modal>
+        <Percentages receipts={receipts}/>
+        <Card title={"Бүртгэгдсэн баримтууд: " + receipts.length} className='mt-5'>
+          <List
+            grid={{
+              gutter: 16,
+              xs: 1,
+              sm: 2,
+              md: 4,
+              lg: 4,
+              xl: 6,
+              xxl: 3,
+            }}
+            dataSource={receipts}
+            renderItem={(item) => (
+              <List.Item>
+                <Text>{item}</Text>
+              </List.Item>
+            )}
+          />
+        </Card>
+        <FloatButton type='primary' onClick={showCreateReceiptModal} icon={<UserAddOutlined />} className='w-[75px] h-[75px]'/>
+        <Modal 
+          title="Хэрэглэгч үүсгэх" 
+          open={isCreateReceiptOpen}
+          onCancel={handleCreateReceiptCancel}
+          footer={<Button className='btn primary' onClick={handleCreateReceiptOk} >Үүсгэх</Button>}
+        >
+          <Form className='flex flex-col justify-center'>
+              <Form.Item
+                    label='Баримтын дугаар:'
+                    name='name'>
+                    <Input placeholder='102324252' onChange={(e) => {setReceipt(e.target.value)}}/>
+              </Form.Item>
+          </Form>
+        </Modal>
     </div>
   )
 }
 
-export default LotteryTable;
+export default Receipts;
