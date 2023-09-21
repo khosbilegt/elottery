@@ -14,6 +14,8 @@ function Months() {
   const [isDatePickerOpen, setDatePickerOpen] = useState(false);
   const [date, setDate] = useState('');
 
+  const path = usePathname().replace('/', '');
+
   const onChange: DatePickerProps['onChange'] = (dateTemp, dateString) => {
     setDate(dateString);
   }
@@ -25,15 +27,16 @@ function Months() {
   const handleDatePickerOk = () => {
     const cachedJson = localStorage.getItem('elottery') || '{}';
     let newJson = JSON.parse(cachedJson);
-    const pathname = usePathname().replace('/', '');
 
-    if(newJson[pathname].months != null) {
-        newJson[pathname].months[date] = date;
+    if(newJson[path].months[date] != null) {
+      console.log("Not Empty")
     } else {
-        newJson[pathname] = {
-          [date]: date
-        };
+      newJson[path].months.push({
+        month: date,
+        receipts: []
+      })
     }
+
     localStorage.setItem('elottery', JSON.stringify(newJson));
     window.location.reload();
     setDatePickerOpen(false);
@@ -44,10 +47,11 @@ function Months() {
   };
 
   useEffect(() => {
-    const cachedJson: { months?: any } = JSON.parse(localStorage.getItem('elottery') || '{}');
-    console.log(cachedJson);
-    if (cachedJson.months != null) {
-      console.log(months)
+    const cachedJson: { [key: string]: any } = JSON.parse(localStorage.getItem('elottery') || '{}');
+    console.log(cachedJson[path].months);
+    
+    if (cachedJson[path].months != null) {
+      setMonths(cachedJson[path].months)
     }
   }, []);
 
@@ -66,7 +70,7 @@ function Months() {
     <div className='w-1/3 h-full text-center flex flex-col'>
       <List 
         className='text-center'
-        header={<Title className='font-medium'>{usePathname().replace('/', '')}</Title>}
+        header={<Title className='font-medium'>{path.replace('/', '')}</Title>}
         dataSource={[]}
         renderItem={(item) => (
           <List.Item>

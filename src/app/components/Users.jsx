@@ -23,10 +23,10 @@ function Users() {
     const cachedJson = localStorage.getItem('elottery') || '{}';
     let newJson = JSON.parse(cachedJson);
     if(cachedJson) {
-        newJson[username] = {};
+        newJson[username] = { months: [] };
     } else {
         newJson = {
-              [username]: {}
+              [username]: { months: [] }
         };
     }
     localStorage.setItem('elottery', JSON.stringify(newJson));
