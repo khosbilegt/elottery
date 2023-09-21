@@ -1,17 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { List, Card, Typography, Breadcrumb } from 'antd';
+import { List, Card, Typography, Breadcrumb, FloatButton, Modal, Button, Form, Input, message } from 'antd';
 import { usePathname } from 'next/navigation';
+import { UserAddOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
 
 function LotteryTable() {
-
+  const [receipt, setReceipt] = useState();
   const [receipts, setReceipts] = useState();
+  const [isCreateReceiptOpen, setCreateReceiptOpen] = useState(false);
 
   const pathName = usePathname();
 
-  const data = ["test", "test2"];
+  const showCreateReceiptModal = () => {
+    setCreateReceiptOpen(true);
+  }
+
+  function showError(errorMessage, duration = 5) {
+    message.error(errorMessage, duration);
+  }
+
+  const handleCreateReceiptOk = () => {
+    if (receipt.length !== 10) {
+      showError('Баримт 10 оронтой байх ёстой.');
+      return;
+    }
+    if (!/^[A-Z]{2}/.test(receipt)) {
+      showError('Баримтын эхэнд 2 үсэг байх ёстой.');
+      return;
+    }  
+    if (!/^\d{8}$/.test(receipt.substring(2))) {
+      showError('Баримтын төгсгөлд 8 тоо байх ёстой.');
+      return;
+    }
+
+    const cachedJson = JSON.parse(localStorage.getItem('elottery'));
+    if(cachedJson) {
+      const pathSegments = pathName.split('/');
+      for(var i = 0; i < cachedJson[pathSegments[1]].months.length; i++) {
+        if(cachedJson[pathSegments[1]].months[i].month == pathSegments[2]) {
+          const arr = cachedJson[pathSegments[1]].months[i].receipts;
+          arr.push(receipt);
+          cachedJson[pathSegments[1]].months[i].receipts = arr;
+        }
+      }
+    }
+    localStorage.setItem('elottery', JSON.stringify(cachedJson));
+    window.location.reload();
+    setCreateReceiptOpen(false);
+  }
+
+  const handleCreateReceiptCancel = () => {
+    setCreateReceiptOpen(false);
+  }
 
   useEffect(() => {
     const cachedJson = JSON.parse(localStorage.getItem('elottery'));
@@ -19,7 +61,7 @@ function LotteryTable() {
       const pathSegments = pathName.split('/');
       for(var i = 0; i < cachedJson[pathSegments[1]].months.length; i++) {
         if(cachedJson[pathSegments[1]].months[i].month == pathSegments[2]) {
-          console.log(cachedJson[pathSegments[1]].months[i])
+          setReceipts(cachedJson[pathSegments[1]].months[i].receipts)
         }
       }
     }
@@ -30,7 +72,7 @@ function LotteryTable() {
         <Breadcrumb className='text-lg'
           items={[
             {
-              title: <a href="">{pathName.split("/")[1]}</a>,
+              title: <a href={'/' + pathName.split("/")[1]}>{pathName.split("/")[1]}</a>,
             },
             {
               title: pathName.split("/")[2],
@@ -56,6 +98,21 @@ function LotteryTable() {
           )}
         />
       </Card>
+      <FloatButton type='primary' onClick={showCreateReceiptModal} icon={<UserAddOutlined />} className='w-[75px] h-[75px]'/>
+      <Modal 
+        title="Хэрэглэгч үүсгэх" 
+        open={isCreateReceiptOpen}
+        onCancel={handleCreateReceiptCancel}
+        footer={<Button className='btn primary' onClick={handleCreateReceiptOk} >Үүсгэх</Button>}
+      >
+        <Form className='flex flex-col justify-center'>
+            <Form.Item
+                  label='Баримтын дугаар:'
+                  name='name'>
+                  <Input placeholder='102324252' onChange={(e) => {setReceipt(e.target.value)}}/>
+            </Form.Item>
+         </Form>
+      </Modal>
     </div>
   )
 }
