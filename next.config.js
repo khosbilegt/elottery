@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {}
+const basePath = "/elottery";
 
-module.exports = nextConfig
+module.exports = {
+     nextConfig,
+     basePath
+}
