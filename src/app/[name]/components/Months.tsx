@@ -10,7 +10,7 @@ const { Title } = Typography;
 
 function Months() {
   const [months, setMonths] = useState<{ [key: string]: any }>({});
-  const [userNames, setUserNames] = useState<string[]>([]);
+  const [monthNames, setMonthNames] = useState<string[]>([]);
   const [isDatePickerOpen, setDatePickerOpen] = useState(false);
   const [date, setDate] = useState('');
 
@@ -29,7 +29,6 @@ function Months() {
     let newJson = JSON.parse(cachedJson);
 
     if(newJson[path].months[date] != null) {
-      console.log("Not Empty")
     } else {
       newJson[path].months.push({
         month: date,
@@ -48,7 +47,6 @@ function Months() {
 
   useEffect(() => {
     const cachedJson: { [key: string]: any } = JSON.parse(localStorage.getItem('elottery') || '{}');
-    console.log(cachedJson[path].months);
     
     if (cachedJson[path].months != null) {
       setMonths(cachedJson[path].months)
@@ -56,14 +54,18 @@ function Months() {
   }, []);
 
   useEffect(() => {
-    const keys = Object.keys(months);
-    setUserNames(keys);
+    if (months != null) {
+      const updatedMonthNames = Object.keys(months).map((key) => months[key].month);
+      setMonthNames(updatedMonthNames);
+    }
   }, [months]);
 
 
   useEffect(() => {
-    const keys = Object.keys(months);
-    setUserNames(keys);
+    if (months != null) {
+      const updatedMonthNames = Object.keys(months).map((key) => months[key].month);
+      setMonthNames(updatedMonthNames);
+    }
   }, [isDatePickerOpen]);
 
   return (
@@ -71,7 +73,7 @@ function Months() {
       <List 
         className='text-center'
         header={<Title className='font-medium'>{path.replace('/', '')}</Title>}
-        dataSource={[]}
+        dataSource={monthNames}
         renderItem={(item) => (
           <List.Item>
             {/* <Button mark className='w-full' onClick={showModal}>{item}</Button> */}

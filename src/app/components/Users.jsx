@@ -43,7 +43,6 @@ function Users() {
     if(cachedJson) {
       setUsers(JSON.parse(cachedJson));
     }
-    console.log(cachedJson);
   }, []);
 
   useEffect(() => {
