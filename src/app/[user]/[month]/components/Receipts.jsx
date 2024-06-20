@@ -73,7 +73,7 @@ function Receipts() {
         <Breadcrumb className='text-lg'
           items={[
             {
-              title: <a href={'/projects/elottery' + pathName.split("/")[1]}>{pathName.split("/")[1]}</a>,
+              title: <a href={'/projects/elottery/' + pathName.split("/")[1]}>{pathName.split("/")[1]}</a>,
             },
             {
               title: pathName.split("/")[2],
