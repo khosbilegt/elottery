@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    basePath: "/projects/elottery"
-}
+  basePath: "/playground/elottery",
+  output: "standalone",
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
